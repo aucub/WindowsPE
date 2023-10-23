@@ -1,39 +1,39 @@
 # This workflow will build winpe
-# 
+#
 name: Create WinPE_amd64.iso_$(Date:yyyyMMdd)$(Rev:.r)'
 # Controls when the workflow will run
 #on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  # push:
-  #   branches: [ master ]
-  # pull_request:
-  #  branches: [ master ]
+# Triggers the workflow on push or pull request events but only for the master branch
+# push:
+#   branches: [ master ]
+# pull_request:
+#  branches: [ master ]
 
-pr: none 
-trigger: none 
+pr: none
+trigger: none
 
 parameters:
-- name: branding
-  displayName: 'Include drivers'
-  type: string
-  default: 'all'
-  values:
-  - none
-  - all
-  - hp 
-  - dell 
-  - lenovo
-  - vmware
-- name: MDT
-  displayName: 'Include MDT'
-  type: boolean
-  default: false
+  - name: branding
+    displayName: "Include drivers"
+    type: string
+    default: "all"
+    values:
+      - none
+      - all
+      - hp
+      - dell
+      - lenovo
+      - vmware
+  - name: MDT
+    displayName: "Include MDT"
+    type: boolean
+    default: false
 
 variables:
   location: "West Europe"
   vmImageName: "windows-latest"
-  BRANDING:  ${{ parameters.branding }}
-  MDT:  ${{ parameters.mdt }}
+  BRANDING: ${{ parameters.branding }}
+  MDT: ${{ parameters.mdt }}
 
 pool:
   vmImage: $(vmImageName)
@@ -41,35 +41,35 @@ pool:
   workflow_dispatch:
     inputs:
       branding:
-        description: 'Include drivers'
+        description: "Include drivers"
         required: true
-        default: 'all' 
+        default: "all"
         type: choice
         options:
-        - none
-        - all
-        - hp 
-        - dell 
-        - lenovo 
+          - none
+          - all
+          - hp
+          - dell
+          - lenovo
       MDT:
-        description: 'Include MDT'
-        required: true 
-        type: boolean 
+        description: "Include MDT"
+        required: true
+        type: boolean
 
 steps:
   - task: PowerShell@2
     displayName: Print the input values to STDOUT
     inputs:
       pwsh: true
-      targetType: 'inline'
-      script: | 
-           "The tags are:`n`t${env:MDT}`n`t${env:BRANDING}`n`t$(System.DefaultWorkingDirectory)" | write-output
-    
+      targetType: "inline"
+      script: |
+        "The tags are:`n`t${env:MDT}`n`t${env:BRANDING}`n`t$(System.DefaultWorkingDirectory)" | write-output
+
   - task: PowerShell@2
     displayName: Install Choco
     inputs:
       pwsh: true
-      targetType: 'inline'
+      targetType: "inline"
       script: |
         if(test-path -path "$env:ALLUSERSPROFILE\chocolatey\choco.exe"){Write-Output "Choco is already installed"} else {
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
@@ -80,7 +80,7 @@ steps:
     displayName: Install ADK
     inputs:
       pwsh: true
-      targetType: 'inline'
+      targetType: "inline"
       script: |
         choco install windows-adk-all  -y # https://go.microsoft.com/fwlink/?linkid=2165884
 
@@ -102,12 +102,12 @@ steps:
       pwsh: true
       filePath: $(System.DefaultWorkingDirectory)\New-WinPEImage.ps1
       arguments: "-branding $env:BRANDING -mdt $true -arch amd64 -workingDirectory $(System.DefaultWorkingDirectory)"
-      
+
   - task: PowerShell@2
     displayName: Generate filelist
     inputs:
       pwsh: true
-      targetType: 'inline'
+      targetType: "inline"
       script: |
         get-childitem . -Recurse -File | select @{n="File";e={$_.Fullname| Resolve-Path -Relative }}, @{n="SHA256_filehash";e={ ($_.fullname | Get-FileHash -Algorithm SHA256).hash }} | Export-Csv -Path .\filelist.csv -Delimiter ";"
 
@@ -123,5 +123,5 @@ steps:
     displayName: Publish Build Artifact
     inputs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)
-      ArtifactName: 'WinPE_amd64'
-      publishLocation: 'Container'
+      ArtifactName: "WinPE_amd64"
+      publishLocation: "Container"
