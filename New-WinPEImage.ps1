@@ -191,31 +191,38 @@ General notes
     }
 	
     #7zip
-    invoke-restmethod -OutFile ".\temp\7z2107-x64.exe" -uri "https://www.7-zip.org/a/7z2107-x64.exe"
-    7z t ".\temp\7z2107-x64.exe"
+    invoke-restmethod -OutFile ".\temp\7z2301-x64.exe" -uri "https://www.7-zip.org/a/7z2301-x64.exe"
+    7z t ".\temp\7z2301-x64.exe"
     if($LASTEXITCODE -eq 0){
-        7z x -y ".\temp\7z2107-x64.exe" -o"$WinPE_root\Program Files\7-Zip" 
+        7z x -y ".\temp\7z2301-x64.exe" -o"$WinPE_root\Program Files\7-Zip" 
     }
-    # Powershell 7.2.2
+    # Powershell 7
     invoke-restmethod -OutFile ".\temp\pwsh.ps1"  -Uri 'https://aka.ms/install-powershell.ps1'
     .\temp\pwsh.ps1  -Destination "$WinPE_root\Program Files\PowerShell\7"
 
     #notepad ++
-    invoke-restmethod -OutFile ".\temp\npp.8.3.3.portable.x64.zip" -uri "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.3.3/npp.8.3.3.portable.x64.zip"
-    7z t ".\temp\npp.8.3.3.portable.x64.zip"
+    invoke-restmethod -OutFile ".\temp\npp.8.5.8.portable.x64.zip" -uri "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.5.8/npp.8.5.8.portable.x64.zip"
+    7z t ".\temp\npp.8.5.8.portable.x64.zip"
     if($LASTEXITCODE -eq 0){
-        7z x -y ".\temp\npp.8.3.3.portable.x64.zip" -o"$WinPE_root\Program Files\Notepad++" 
+        7z x -y ".\temp\npp.8.5.8.portable.x64.zip" -o"$WinPE_root\Program Files\Notepad++" 
     }
     #launchbar
     Invoke-RestMethod -OutFile ".\temp\LaunchBar_x64.exe" -Uri "https://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe"
     copy-item ".\temp\LaunchBar_x64.exe" -Destination "$WinPE_root\windows\system32\" -verbose
 
     #doublecmd
-    Invoke-RestMethod -OutFile ".\temp\doublecmd-1.0.5.x86_64-win64.zip" -uri "https://deac-fra.dl.sourceforge.net/project/doublecmd/DC for Windows 64 bit/Double Commander 1.0.5 beta/doublecmd-1.0.5.x86_64-win64.zip"
-    7z t ".\temp\doublecmd-1.0.5.x86_64-win64.zip"
+    Invoke-RestMethod -OutFile ".\temp\doublecmd-1.1.4.x86_64-win64.zip" -uri "https://github.com/doublecmd/doublecmd/releases/download/v1.1.4/doublecmd-1.1.4.x86_64-win64.zip"
+    7z t ".\temp\doublecmd-1.1.4.x86_64-win64.zip"
     if($LASTEXITCODE -eq 0){
-        7z x -y ".\temp\doublecmd-1.0.5.x86_64-win64.zip" -o"$WinPE_root\Program Files" 
+        7z x -y ".\temp\doublecmd-1.1.4.x86_64-win64.zip" -o"$WinPE_root\Program Files" 
     }    
+
+    #Dism++
+    Invoke-RestMethod -OutFile ".\temp\Dism++10.1.1002.1B.zip" -uri "https://github.com/Chuyu-Team/Dism-Multi-language/releases/download/v10.1.1002.2/Dism++10.1.1002.1B.zip"
+    7z t ".\temp\Dism++10.1.1002.1B.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\temp\Dism++10.1.1002.1B.zip" -o"$WinPE_root\Program Files\Dism++" 
+    }  
     #utils
     $json=@"
 {
