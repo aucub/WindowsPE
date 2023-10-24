@@ -4,11 +4,6 @@ Param(
     [ValidateSet("amd64", "x86", "arm","arm64")]$arch="amd64",
     [string]$workingDirectory=$env:GITHUB_WORKSPACE
 )
-#https://go.microsoft.com/fwlink/?linkid=2165884 #ADK
-#https://go.microsoft.com/fwlink/?linkid=2166133 #ADK Add-on WinPE
-#https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-mount-and-customize?view=windows-11
-#https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/use-dism-in-windows-powershell-s14?view=windows-11
-
 
 $json=get-content -path .\env.json -raw | convertfrom-json
 
@@ -222,6 +217,13 @@ General notes
     7z t ".\temp\Dism++10.1.1002.1B.zip"
     if($LASTEXITCODE -eq 0){
         7z x -y ".\temp\Dism++10.1.1002.1B.zip" -o"$WinPE_root\Program Files\Dism++" 
+    }  
+
+    #DiskGenius
+    Invoke-RestMethod -OutFile ".\temp\DGEng5511508_x64.zip" -uri "https://www.diskgenius.com/dyna_download/?iswinpe=true&software=DGEng5511508_x64.zip"
+    7z t ".\temp\DGEng5511508_x64.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\temp\DGEng5511508_x64.zip" -o"$WinPE_root\Program Files" 
     }  
     #utils
     $json=@"

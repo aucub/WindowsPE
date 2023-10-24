@@ -1,10 +1,10 @@
-# Windows_PE
+# Windows PE
 
 
-Automatic build &amp; customization of WinPE
+Build &amp; customization of WinPE
 
 
-- [Windows_PE](#windows_pe)
+- [Windows PE](#windows-pe)
   - [Basic](#basic)
   - [Customization](#customization)
     - [Basic commands](#basic-commands)
@@ -49,11 +49,6 @@ _Screenshot after <15sec boot:_
 
 ![image](https://user-images.githubusercontent.com/12066560/165970164-51bd4f18-9192-4082-a866-2cdbacbd5caa.png)
 
-
-
-
-
-
 ## Customization
 ### Basic commands
 - Mount <br>`Mount-WindowsImage -ImagePath "$ISO_root\Deploy\Boot\boot.wim" -index 1  -Path "$WinPE_root"`
@@ -73,10 +68,13 @@ _Screenshot after <15sec boot:_
   - Read MDT and other logs
 - Process Explorer
 - 7-Zip
-- Powershell 7.2.2+
+- Powershell 7+
 - Notepad++
 - DoubleCMD
   - File Explorer as Explorer.exe is unavailable 
+- Dism++
+- DiskGenius
+- WinNTSetup
 - Missing executables and added:
   - label
   - logman
@@ -100,6 +98,7 @@ _Screenshot after <15sec boot:_
     - CMTrace_amd64.exe
     - DeploymentMonitoringTool.exe
     - LaunchBar_x64.exe
+    - WinNTSetup.exe
     - launchbar.ini
     - test.bat
     - winpeshl.ini 
@@ -125,9 +124,13 @@ _Screenshot after <15sec boot:_
 - WinPE-Dot3Svc
 - WinPE-FMAPI
 - WinPE-FontSupport-WinRE
-- WinPE-PlatformId
 - WinPE-WDS-Tools
 - WinPE-WinReCfg
+- WinPE-Font Support-ZH-CN
+- Winpe-LegacySetup
+- WinPE-Setup
+- WinPE-Setup-Client
+- WinPE-Setup-Server
 </details>
     
 #### Inactive Components
@@ -137,17 +140,12 @@ _Screenshot after <15sec boot:_
 - WinPE-Fonts-Legacy
 - WinPE-Font Support-JA-JP
 - WinPE-Font Support-KO-KR
-- WinPE-Font Support-ZH-CN
 - WinPE-Font Support-ZH-HK
 - WinPE-GamingPeripherals
-- Winpe-LegacySetup
 - WinPE-MDAC
 - WinPE-PPPoE
 - WinPE-Rejuv
 - WinPE-RNDIS
-- WinPE-Setup
-- WinPE-Setup-Client
-- WinPE-Setup-Server
 - WinPE-SRT
 - WinPE-WiFi-Package
 </details>
