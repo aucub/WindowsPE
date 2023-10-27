@@ -14,7 +14,6 @@ Build &amp; customization of WinPE
     - [Enabled components](#enabled-components)
       - [Inactive Components](#inactive-components)
   - [Documentation](#documentation)
-  - [Full Windows UEFI Boot schematic of Windows PE](#full-windows-uefi-boot-schematic-of-windows-pe)
 
 ## Basic
 
@@ -75,6 +74,9 @@ _Screenshot after <15sec boot:_
 - Dism++
 - DiskGenius
 - WinNTSetup
+- BOOTICE
+- CGI-plus
+- ImDisk
 - Missing executables and added:
   - label
   - logman
@@ -99,8 +101,8 @@ _Screenshot after <15sec boot:_
     - DeploymentMonitoringTool.exe
     - LaunchBar_x64.exe
     - WinNTSetup.exe
+    - BOOTICEx64.exe
     - launchbar.ini
-    - test.bat
     - winpeshl.ini 
 - ISO
   - Add to `"$workingDirectory\WinPE_$arch\media"` folder
@@ -127,10 +129,6 @@ _Screenshot after <15sec boot:_
 - WinPE-WDS-Tools
 - WinPE-WinReCfg
 - WinPE-Font Support-ZH-CN
-- Winpe-LegacySetup
-- WinPE-Setup
-- WinPE-Setup-Client
-- WinPE-Setup-Server
 </details>
     
 #### Inactive Components
@@ -148,126 +146,13 @@ _Screenshot after <15sec boot:_
 - WinPE-RNDIS
 - WinPE-SRT
 - WinPE-WiFi-Package
+- Winpe-LegacySetup
+- WinPE-Setup
+- WinPE-Setup-Client
+- WinPE-Setup-Server
 </details>
 
 
 ## Documentation
 
 - [WinPE Optional Components](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11)
-
-
-## Full Windows UEFI Boot schematic of Windows PE
-
-```mermaid
-
-%%{init: {'theme': 'dark', 'themeVariables': { 'darkMode': 'true'}}}%%
-
-
-flowchart TB
-    WR[Winlogon.exe reads HKLM\System\Setup\CmdLine:<br> winpeshl.exe]
-    WP[winpeshl.exe runs]
-    SE{%SYSTEMDRIVE%\sources\setup.exe exist?}
-    RE[Run Setup.exe]
-    RW[Read winpeshl.ini]
-    AP{Winpeshl.ini exist and has valid content?}
-
-    A1[Run App1.exe with parameter /parameter1]
-
-
-    MD{MDT is included?}
-    RS[Run <br>cmd /k %SYSTEMROOT\system32\startnet.cmd]
-    SN[Startnet.cmd: <br>wpeinit.exe]
-
-    RA[Run applications as specified in winpeshl.ini<br><br><i>Run app in order of appearance <br>Starts when the previous app has terminated.</i>]
-
-    UE{Unattend.xml exist?}
-    UX[Unattend.xml:<br>RunSynchronousCommand<br> wscript.exe X:\Deploy\Scripts\LiteTouch.wsf]
-    WI[wpeinit.exe]
-    BD[bddrun.exe]
-    LT[LiteTouch.wsf]
-    LP{Check if there are any Task Sequences in progress <br>c:\minint and/or <br>c:\_SMSTaskSequence\TSEnv.dat}
-    ET[Execute Task Sequence]
-    NT[New Task Sequence]
-    BS[Bootstrap.ini]
-    CS[CustomSettings.ini from DeployRoot]
-    WW[Welcome Wizard]
-    DW[Deployment Wizard]
-    RT[Run Task Sequence]
-
-    PO[POST]
-    LF[Launch UEFI Firmware]
-    BI[Get Boot Info from SRAM]
-    LB[Launch Windows Boot Manager]
-    BM[EFI-BOOT-BOOTX64]
-    RB[Read BCD-file]
-    WL[Launch Boot Loader<br>Boot.wim:<br>Winload.efi]
-    LO[Load HAL, Registry, Boot Drivers]
-    NL[Ntoskrnl.exe]
-    SM[SMSS.exe]
-    W3[Win32k.sys]
-    WN[Winlogon.exe]
-
-
-
-subgraph UEFI [UEFI Boot]
-    PO ==> LF
-    LF ==> BI
-    BI ==> LB
-    subgraph WBM [Windows Boot Manager]
-        LB ==> BM
-        BM ==> RB
-    end
-    RB ==> WL
-    subgraph WBL [Windows Boot Loader]
-        WL ==> LO
-    end
-    subgraph KRN [Windows NT OS Kernel]
-        LO ==> NL
-        NL ==> SM
-        SM -.-> W3
-        SM ==> WN
-    end
-
-end
-WN==> WR
-subgraph WinPE
-    WR ==> WP ==> SE
-    SE ==> |yes| RE
-    SE ==> |no | RW
-    RW ==> AP
-    AP ==> |yes| RA
-
-    MD ==> |yes| BD
-    MD ==> |no| Error
-    RA ==>| %SYSTEMDRIVE%\Apps\App1.exe, /parameter1 | A1
-    RA ==>| %SYSTEMROOT%\System32\bddrun.exe, /bootstrap | MD
-    AP ==> |no | RS
-
-
-
-subgraph cmd [cmd.exe]
-    RS ==> SN
-end
-
-    
-subgraph MDT [MDT]
-    SN -.-> WI
-    BD ==> WI
-    WI -.-> UE
-    UE ==> |yes| UX
-    UX ==> LT ==> LP
-    LP ==> |no| NT
-    LP ==> |yes| ET
-    NT ==> |ZTIGather| BS
-    BS ==> WW
-    WW ==> CS
-    CS ==> DW
-    DW ==> RT
-    RT ==> ET
-end
-
-end
-UX -...- |ERROR| cmd
-
-```
-

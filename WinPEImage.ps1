@@ -53,7 +53,6 @@ generate folderstructure
 
 .NOTES
     Boot
-
     Deploy\Boot\{boot.wim -> LiteTouchPE_x64.wim} 
     EFI
     bootmgr
@@ -84,7 +83,7 @@ General notes
 
 }
 
- Function Add-OptionalComponents() {
+Function Add-OptionalComponents() {
 <#
 .SYNOPSIS
 Add WinPE Optional Components
@@ -176,6 +175,8 @@ General notes
     
 	#DeploymentMonitoringTool.exe (no download, direct included)
 	#CMTrace.exe (no download, direct included)
+    #WinNTSetup.exe (no download, direct included)
+    #BOOTICEx64.exe (no download, direct included)
 	
 	#process explorer
     invoke-restmethod -OutFile ".\temp\ProcessExplorer.zip" -uri "https://download.sysinternals.com/files/ProcessExplorer.zip"
@@ -191,6 +192,7 @@ General notes
     if($LASTEXITCODE -eq 0){
         7z x -y ".\temp\7z2301-x64.exe" -o"$WinPE_root\Program Files\7-Zip" 
     }
+
     # Powershell 7
     invoke-restmethod -OutFile ".\temp\pwsh.ps1"  -Uri 'https://aka.ms/install-powershell.ps1'
     .\temp\pwsh.ps1  -Destination "$WinPE_root\Program Files\PowerShell\7"
@@ -201,6 +203,7 @@ General notes
     if($LASTEXITCODE -eq 0){
         7z x -y ".\temp\npp.8.5.8.portable.x64.zip" -o"$WinPE_root\Program Files\Notepad++" 
     }
+
     #launchbar
     Invoke-RestMethod -OutFile ".\temp\LaunchBar_x64.exe" -Uri "https://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe"
     copy-item ".\temp\LaunchBar_x64.exe" -Destination "$WinPE_root\windows\system32\" -verbose
@@ -220,11 +223,30 @@ General notes
     }  
 
     #DiskGenius
-    Invoke-RestMethod -OutFile ".\temp\DGEng5511508_x64.zip" -uri "https://www.diskgenius.com/dyna_download/?iswinpe=true&software=DGEng5511508_x64.zip"
-    7z t ".\temp\DGEng5511508_x64.zip"
+    7z t ".\source\DiskGenius.zip"
     if($LASTEXITCODE -eq 0){
-        7z x -y ".\temp\DGEng5511508_x64.zip" -o"$WinPE_root\Program Files" 
+        7z x -y ".\source\DiskGenius.zip" -o"$WinPE_root\Program Files" 
     }  
+
+    #cpu-z
+    Invoke-RestMethod -OutFile ".\temp\cpu-z_2.08-cn.zip" -uri "https://download.cpuid.com/cpu-z/cpu-z_2.08-cn.zip"
+    7z t ".\temp\cpu-z_2.08-cn.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\temp\cpu-z_2.08-cn.zip" -o"$WinPE_root\Program Files\cpu-z" 
+    }  
+
+    #CGI-plus
+    7z t ".\source\CGI-plus.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\source\CGI-plus.zip" -o"$WinPE_root\Program Files\CGI-plus" 
+    }
+
+    #ImDisk
+    7z t ".\source\ImDisk.cab"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\source\ImDisk.cab" -o"$WinPE_root\Program Files\ImDisk" 
+    }
+
     #utils
     $json=@"
 {
@@ -366,7 +388,7 @@ Unmount /mount to boot.wim
 .NOTES
 General notes
 #>
- 
+
     "Unmounting boot.wim image" | write-host -foregroundcolor magenta
     Dismount-WindowsImage -Path "$WinPE_root" -Save
     $endsize=get-item -path "$ISO_root\Deploy\Boot\boot.wim" | Select-Object -ExpandProperty length
