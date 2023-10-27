@@ -97,10 +97,10 @@ General notes
         "Adding: $c" | write-host -foregroundcolor cyan
 
         Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\$c.cab" -PreventPending
-        if(test-path -path "$WinPEPATH\$arch\WinPE_OCs\en-us\$c`_en-us.cab" ){
-            Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\en-us\$c`_en-us.cab" -PreventPending
+        if(test-path -path "$WinPEPATH\$arch\WinPE_OCs\zh-cn\$c`_zh-cn.cab" ){
+            Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\zh-cn\$c`_zh-cn.cab" -PreventPending
         } else {
-            "$c`_en-us.cab not found.. continuing" | write-host -foregroundcolor cyan
+            "$c`_zh-cn.cab not found.. continuing" | write-host -foregroundcolor cyan
         }
     }
 }
@@ -175,8 +175,8 @@ General notes
     
 	#DeploymentMonitoringTool.exe (no download, direct included)
 	#CMTrace.exe (no download, direct included)
-    #WinNTSetup.exe (no download, direct included)
-    #BOOTICEx64.exe (no download, direct included)
+    #BOOTICE.exe (no download, direct included)
+    #UltraISO.exe (no download, direct included)
 	
 	#process explorer
     invoke-restmethod -OutFile ".\temp\ProcessExplorer.zip" -uri "https://download.sysinternals.com/files/ProcessExplorer.zip"
@@ -193,7 +193,7 @@ General notes
         7z x -y ".\temp\7z2301-x64.exe" -o"$WinPE_root\Program Files\7-Zip" 
     }
 
-    # Powershell 7
+    #Powershell 7
     invoke-restmethod -OutFile ".\temp\pwsh.ps1"  -Uri 'https://aka.ms/install-powershell.ps1'
     .\temp\pwsh.ps1  -Destination "$WinPE_root\Program Files\PowerShell\7"
 
@@ -241,11 +241,16 @@ General notes
         7z x -y ".\source\CGI-plus.zip" -o"$WinPE_root\Program Files\CGI-plus" 
     }
 
-    #ImDisk
-    7z t ".\source\ImDisk.cab"
+    #PECMD
+    7z t ".\source\PECMD.zip"
     if($LASTEXITCODE -eq 0){
-        7z x -y ".\source\ImDisk.cab" -o"$WinPE_root\Program Files\ImDisk" 
+        7z x -y ".\source\PECMD.zip" -o"$WinPE_root\Program Files" 
     }
+
+    #中文
+    Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\zh-cn\lp.cab" -PreventPending
+    Dism /Set-AllIntl:zh-CN /Image:"$WinPE_root"
+    Dism /Set-TimeZone:"China Standard Time" /Image:"$WinPE_root"
 
     #utils
     $json=@"

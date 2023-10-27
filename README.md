@@ -76,7 +76,8 @@ _Screenshot after <15sec boot:_
 - WinNTSetup
 - BOOTICE
 - CGI-plus
-- ImDisk
+- UltraISO
+- PECMD
 - Missing executables and added:
   - label
   - logman
@@ -99,9 +100,7 @@ _Screenshot after <15sec boot:_
   - Included files in `source\_winpe\Windows\System32` to be added to `$workingDirectory\WinPE_$arch\mount\Windows\System32`
     - CMTrace_amd64.exe
     - DeploymentMonitoringTool.exe
-    - LaunchBar_x64.exe
-    - WinNTSetup.exe
-    - BOOTICEx64.exe
+    - BOOTICE.exe
     - launchbar.ini
     - winpeshl.ini 
 - ISO
