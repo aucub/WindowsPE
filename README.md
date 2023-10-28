@@ -61,9 +61,9 @@ _Screenshot after <15sec boot:_
 
 - Launchbar 
   - Quicklaunch for apps
-- DeploymentMonitoringTool.exe (included in source)
+- DeploymentMonitoringTool (included in source)
   - Get info about current machine
-- CMTrace_amd64.exe (included in source)
+- CMTrace (included in source)
   - Read MDT and other logs
 - Process Explorer
 - 7-Zip
@@ -72,11 +72,10 @@ _Screenshot after <15sec boot:_
 - DoubleCMD
   - File Explorer as Explorer.exe is unavailable 
 - Dism++
+- imgdrive
 - DiskGenius
-- WinNTSetup
 - BOOTICE
 - CGI-plus
-- UltraISO
 - PECMD
 - Missing executables and added:
   - label
@@ -98,7 +97,7 @@ _Screenshot after <15sec boot:_
 - WinPE (X:\)
   - Add to `$workingDirectory\WinPE_$arch\mount` folder.
   - Included files in `source\_winpe\Windows\System32` to be added to `$workingDirectory\WinPE_$arch\mount\Windows\System32`
-    - CMTrace_amd64.exe
+    - CMTrace.exe
     - DeploymentMonitoringTool.exe
     - BOOTICE.exe
     - launchbar.ini

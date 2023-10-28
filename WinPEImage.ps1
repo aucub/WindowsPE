@@ -176,7 +176,6 @@ General notes
 	#DeploymentMonitoringTool.exe (no download, direct included)
 	#CMTrace.exe (no download, direct included)
     #BOOTICE.exe (no download, direct included)
-    #UltraISO.exe (no download, direct included)
 	
 	#process explorer
     invoke-restmethod -OutFile ".\temp\ProcessExplorer.zip" -uri "https://download.sysinternals.com/files/ProcessExplorer.zip"
@@ -235,6 +234,13 @@ General notes
         7z x -y ".\temp\cpu-z_2.08-cn.zip" -o"$WinPE_root\Program Files\cpu-z" 
     }  
 
+    #imgdrive
+    Invoke-RestMethod -OutFile ".\temp\imgdrive_2.0.8_portable.zip" -uri "https://download.yubsoft.com/imgdrive_2.0.8_portable.zip"
+    7z t ".\temp\imgdrive_2.0.8_portable.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\temp\imgdrive_2.0.8_portable.zip" -o"$WinPE_root\Program Files\imgdrive" 
+    }
+
     #CGI-plus
     7z t ".\source\CGI-plus.zip"
     if($LASTEXITCODE -eq 0){
@@ -245,12 +251,6 @@ General notes
     7z t ".\source\PECMD.zip"
     if($LASTEXITCODE -eq 0){
         7z x -y ".\source\PECMD.zip" -o"$WinPE_root\Program Files" 
-    }
-
-    #DAEMON Tools Lite
-    7z t ".\source\DAEMON Tools Lite.zip"
-    if($LASTEXITCODE -eq 0){
-        7z x -y ".\source\DAEMON Tools Lite.zip" -o"$WinPE_root\Program Files" 
     }
 
     #中文
