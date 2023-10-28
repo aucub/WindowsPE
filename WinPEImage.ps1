@@ -247,6 +247,12 @@ General notes
         7z x -y ".\source\PECMD.zip" -o"$WinPE_root\Program Files" 
     }
 
+    #DAEMON Tools Lite
+    7z t ".\source\DAEMON Tools Lite.zip"
+    if($LASTEXITCODE -eq 0){
+        7z x -y ".\source\DAEMON Tools Lite.zip" -o"$WinPE_root\Program Files" 
+    }
+
     #中文
     Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\zh-cn\lp.cab" -PreventPending
     Dism /Set-AllIntl:zh-CN /Image:"$WinPE_root"
