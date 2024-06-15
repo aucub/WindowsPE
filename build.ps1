@@ -1,7 +1,7 @@
 # 设置变量
 Param(
-    [ValidateSet("all", "none", "hp", "dell", "lenovo")]$branding = "all", # Microsoft 部署工具包  
-    [boolean]$mdt = $false,
+    [ValidateSet("all", "none", "hp", "dell", "lenovo")]$branding = "all", 
+    [boolean]$mdt = $false, # Microsoft 部署工具包
     [ValidateSet("amd64", "x86", "arm", "arm64")]$arch = "amd64",
     [string]$workingDirectory = $env:GITHUB_WORKSPACE
 )
@@ -163,80 +163,80 @@ General notes
         copy-item -path ".\temp\procexp64.exe" -Destination "$WinPE_root\windows\system32\" -verbose
     }
 	
-    #7zip
+    # 7zip
     invoke-restmethod -OutFile ".\temp\7z.exe" -uri "https://www.7-zip.org/a/7z2406-x64.exe"
     7z t ".\temp\7z.exe"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\7z.exe" -o"$WinPE_root\Program Files\7-Zip" 
     }
 
-    #Powershell 7
+    # Powershell 7
     invoke-restmethod -OutFile ".\temp\pwsh.ps1"  -Uri 'https://aka.ms/install-powershell.ps1'
     .\temp\pwsh.ps1  -Destination "$WinPE_root\Program Files\PowerShell\7"
 
-    #notepad ++
+    # notepad ++
     invoke-restmethod -OutFile ".\temp\npp.zip" -uri "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.6.8/npp.8.6.8.portable.x64.zip"
     7z t ".\temp\npp.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\npp.zip" -o"$WinPE_root\Program Files\Notepad++" 
     }
 
-    #launchbar
+    # launchbar
     Invoke-RestMethod -OutFile ".\temp\LaunchBar.exe" -Uri "https://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe"
     copy-item ".\temp\LaunchBar.exe" -Destination "$WinPE_root\windows\system32\" -verbose
 
-    #doublecmd
+    # doublecmd
     Invoke-RestMethod -OutFile ".\temp\doublecmd.zip" -uri "https://github.com/doublecmd/doublecmd/releases/download/v1.1.15/doublecmd-1.1.15.x86_64-win64.zip"
     7z t ".\temp\doublecmd.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\doublecmd.zip" -o"$WinPE_root\Program Files" 
     }    
 
-    #Dism++
+    # Dism++
     Invoke-RestMethod -OutFile ".\temp\Dism++.zip" -uri "https://github.com/Chuyu-Team/Dism-Multi-language/releases/download/v10.1.1002.2/Dism++10.1.1002.1B.zip"
     7z t ".\temp\Dism++.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\Dism++.zip" -o"$WinPE_root\Program Files\Dism++" 
     }  
 
-    #DiskGenius
+    # DiskGenius
     7z t ".\source\DiskGenius.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\source\DiskGenius.zip" -o"$WinPE_root\Program Files" 
     }
 
-    #cpu-z
+    # cpu-z
     Invoke-RestMethod -OutFile ".\temp\cpu-z.zip" -uri "https://download.cpuid.com/cpu-z/cpu-z_2.09-cn.zip"
     7z t ".\temp\cpu-z.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\cpu-z.zip" -o"$WinPE_root\Program Files\cpu-z" 
     }  
 
-    #imgdrive
+    # imgdrive
     Invoke-RestMethod -OutFile ".\temp\imgdrive.zip" -uri "https://download.yubsoft.com/imgdrive_2.1.8_portable.zip"
     7z t ".\temp\imgdrive.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\temp\imgdrive.zip" -o"$WinPE_root\Program Files\imgdrive" 
     }
 
-    #CGI-plus
+    # CGI-plus
     7z t ".\source\CGI-plus.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\source\CGI-plus.zip" -o"$WinPE_root\Program Files\CGI-plus" 
     }
 
-    #PECMD
+    # PECMD
     7z t ".\source\PECMD.zip"
     if ($LASTEXITCODE -eq 0) {
         7z x -y ".\source\PECMD.zip" -o"$WinPE_root\Program Files" 
     }
 
-    #中文
+    # 中文
     Add-WindowsPackage -Path "$WinPE_root" -PackagePath "$WinPEPATH\$arch\WinPE_OCs\zh-cn\lp.cab" -PreventPending
     Dism /Set-AllIntl:zh-CN /Image:"$WinPE_root"
     Dism /Set-TimeZone:"China Standard Time" /Image:"$WinPE_root"
 
-    #工具
+    # 工具
     $json = @"
 {
     "System32": [
